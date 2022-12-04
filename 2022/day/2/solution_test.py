@@ -6,7 +6,7 @@ from typing import Tuple
 sys.path.append('../../helpers')
 
 from helpers import read_int
-from solution import Round, ROCK, PAPER, SCISSORS, get_shape_score, get_round_score, solve
+from solution import Round, ROCK, PAPER, SCISSORS, get_shape_score, get_round_score, solve_part1, solve_part2
 
 WON_SCORE, DRAW_SCORE, LOST_SCORE, = 6, 3, 0
 
@@ -30,14 +30,24 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(LOST_SCORE, get_round_score(Round(PAPER, SCISSORS)))
         self.assertEqual(DRAW_SCORE, get_round_score(Round(PAPER, PAPER)))
 
-    def test_score_small_case(self):
-        expected = read_int('test/output.txt')
-        actual = solve('test/input.txt')
+    def test_score_small_input_part_1(self):
+        expected = read_int('test/output-small-part1.txt')
+        actual = solve_part1('test/input-small.txt')
         self.assertEqual(expected, actual)
 
-    def test_score_large_case(self):
-        expected = read_int('test/output-large.txt')
-        actual = solve('input.txt')
+    def test_score_large_input_part_1(self):
+        expected = read_int('test/output-large-part1.txt')
+        actual = solve_part1('test/input-large.txt')
+        self.assertEqual(expected, actual)
+
+    def test_score_small_input_part_2(self):
+        expected = read_int('test/output-small-part2.txt')
+        actual = solve_part2('test/input-small.txt')
+        self.assertEqual(expected, actual)
+
+    def test_score_large_input_part_2(self):
+        expected = read_int('test/output-large-part2.txt')
+        actual = solve_part2('test/input-large.txt')
         self.assertEqual(expected, actual)
 
 

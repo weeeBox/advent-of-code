@@ -27,6 +27,14 @@ _YOU_WIN_ROUNDS = {
     (PAPER, ROCK),
 }
 
+_WIN_SHAPE = {
+    second: first for first, second in _YOU_WIN_ROUNDS
+}
+
+_LOOSE_SHAPE = {
+    first: second for first, second in _YOU_WIN_ROUNDS
+}
+
 _CODE_LOOKUP = {
     'A': ROCK,
     'B': PAPER,
@@ -34,6 +42,25 @@ _CODE_LOOKUP = {
     'X': ROCK,
     'Y': PAPER,
     'Z': SCISSORS
+}
+
+
+def get_win_shape(shape: str) -> str:
+    return _WIN_SHAPE[shape]
+
+
+def get_loose_shape(shape: str) -> str:
+    return _LOOSE_SHAPE[shape]
+
+
+def get_draw_shape(shape: str) -> str:
+    return shape
+
+
+_STRATEGY_LOOKUP = {
+    'X': get_loose_shape,
+    'Y': get_draw_shape,
+    'Z': get_win_shape,
 }
 
 Round = namedtuple('Round', ('you', 'opponent'))
@@ -67,17 +94,30 @@ def get_score(rounds: Tuple[Round, ...]) -> int:
     return total
 
 
-def parse_round(value: str) -> Round:
+def parse_round_part1(value: str) -> Round:
     opponent, you = value.split(' ')
     # we flip the values to make code more intuitive
     return Round(you=_CODE_LOOKUP[you], opponent=_CODE_LOOKUP[opponent])
 
 
-def solve(path) -> int:
-    rounds = read_values(path, parser=parse_round)
+def parse_round_part2(value: str) -> Round:
+    opponent_code, strategy_code = value.split(' ')
+    opponent = _CODE_LOOKUP[opponent_code]
+    get_shape = _STRATEGY_LOOKUP[strategy_code]
+    you = get_shape(opponent)
+
+    # we flip the values to make code more intuitive
+    return Round(you, opponent)
+
+
+def _solve(path, parser):
+    rounds = read_values(path, parser=parser)
     return get_score(rounds)
 
 
-if __name__ == '__main__':
-    score = solve('input.txt')
-    print(score)
+def solve_part1(path) -> int:
+    return _solve(path, parser=parse_round_part1)
+
+
+def solve_part2(path) -> int:
+    return _solve(path, parser=parse_round_part2)
