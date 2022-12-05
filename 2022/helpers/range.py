@@ -13,15 +13,12 @@ class Range(object):
         self.start = start
         self.end = end
 
+    def overlaps(self, other: Range) -> bool:
+        return self.end >= other.start and self.start <= other.end
+
     def fully_overlaps(self, other: Range) -> bool:
         return self.start <= other.start and self.end >= other.end or \
                other.start <= self.start and other.end >= self.end
-
-    # •---•
-    #  •-•
-
-    #  •-•
-    # •---•
 
     def __eq__(self, other):
         return self.start == other.start and self.end == other.end
