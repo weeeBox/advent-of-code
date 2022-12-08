@@ -70,17 +70,28 @@ def _read_crates_and_ops(path: str) -> Tuple[dict, tuple]:
     return dict(lookup), tuple(ops)
 
 
-def _simulate(stacks: dict, ops: Tuple[Operation]) -> dict:
+def _simulate(stacks: dict, ops: Tuple[Operation], one_by_one: bool) -> dict:
     res = {number: list(crates) for number, crates in stacks.items()}
     for src, dst, count in ops:
-        while count > 0:
-            res[dst].append(res[src].pop())
-            count -= 1
+        if one_by_one:
+            while count > 0:
+                res[dst].append(res[src].pop())
+                count -= 1
+        else:
+            res[dst].extend(res[src][-count:])
+            del res[src][-count:]
     return res
 
 
 def get_top_crates(path: str) -> str:
     crates, ops = _read_crates_and_ops(path)
-    new_crates = _simulate(crates, ops)
+    new_crates = _simulate(crates, ops, one_by_one=True)
+
+    return ''.join(new_crates[number][-1] for number in sorted(new_crates.keys()))
+
+
+def get_top_crates_at_once(path: str) -> str:
+    crates, ops = _read_crates_and_ops(path)
+    new_crates = _simulate(crates, ops, one_by_one=False)
 
     return ''.join(new_crates[number][-1] for number in sorted(new_crates.keys()))
