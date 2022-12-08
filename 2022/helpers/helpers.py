@@ -10,6 +10,10 @@ def parse_values(text: str, parser=None, separator='\n') -> tuple:
     return tuple(map(parser, lines) if parser else lines)
 
 
-def read_int(file: str) -> int:
+def read_str(file: str) -> str:
     with open(file, 'r') as f:
-        return int(f.read())
+        return f.read()
+
+
+def read_int(file: str) -> int:
+    return int(read_str(file))
